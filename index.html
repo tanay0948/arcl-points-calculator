@@ -3,24 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARCL Points & Live Match Assistant</title>
+  <title>ARCL Live Points Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-indigo-100 to-blue-50 min-h-screen flex flex-col items-center p-4">
 
+<body class="bg-gradient-to-br from-indigo-100 to-blue-50 min-h-screen flex flex-col items-center p-4">
   <header class="text-center mt-6 mb-4">
-    <h1 class="text-3xl font-bold text-blue-800">🏏 ARCL Points Assistant</h1>
-    <p class="text-gray-600">Calculate match points or get live suggestions</p>
+    <h1 class="text-3xl font-bold text-blue-800">🏏 ARCL Live Points Assistant</h1>
+    <p class="text-gray-600">Track points and improve your bonus in real time</p>
   </header>
 
   <!-- Tabs -->
   <div class="flex space-x-4 mb-4">
-    <button id="tabCompleted" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold">Completed Match</button>
-    <button id="tabLive" class="px-4 py-2 bg-white border border-blue-600 text-blue-700 rounded-lg font-semibold">Ongoing Match</button>
+    <button id="tabLive" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold">Ongoing Match</button>
+    <button id="tabCompleted" class="px-4 py-2 bg-white border border-blue-600 text-blue-700 rounded-lg font-semibold">Completed Match</button>
   </div>
 
-  <!-- Completed Match Card -->
-  <div id="completedCard" class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg">
+  <!-- LIVE MATCH CARD (default visible) -->
+  <div id="liveCard" class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg">
+    <h2 class="text-xl font-bold mb-4 text-green-700">Ongoing Match Insights</h2>
+    <div class="space-y-3">
+      <div>
+        <label class="block font-semibold">Who is batting first?</label>
+        <select id="l_batFirst" class="w-full border p-2 rounded-md">
+          <option value="us">We are batting first</option>
+          <option value="them">Opponent is batting first (we are chasing)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-semibold">Your Current Score</label>
+        <input id="l_yourScore" type="number" class="w-full border p-2 rounded-md" placeholder="e.g. 95">
+      </div>
+      <div>
+        <label class="block font-semibold">Overs Faced</label>
+        <input id="l_yourOvers" type="number" step="0.1" class="w-full border p-2 rounded-md" placeholder="e.g. 12">
+      </div>
+      <div>
+        <label class="block font-semibold">Opponent's Final/Target Score</label>
+        <input id="l_oppScore" type="number" class="w-full border p-2 rounded-md" placeholder="e.g. 160">
+      </div>
+      <div>
+        <label class="block font-semibold">Opponent Overs</label>
+        <input id="l_oppOvers" type="number" step="0.1" class="w-full border p-2 rounded-md" placeholder="e.g. 16">
+      </div>
+      <div>
+        <label class="block font-semibold">Wickets Taken by You So Far</label>
+        <input id="l_wkts" type="number" class="w-full border p-2 rounded-md" placeholder="e.g. 4">
+      </div>
+      <button onclick="suggestLive()" class="mt-3 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg">Get Live Suggestions</button>
+    </div>
+
+    <div id="liveResult" class="hidden mt-6 border-t pt-4">
+      <h3 class="text-lg font-bold text-green-800 mb-2">Suggestions</h3>
+      <div id="l_suggestions" class="text-gray-700 space-y-2"></div>
+    </div>
+  </div>
+
+  <!-- COMPLETED MATCH CARD -->
+  <div id="completedCard" class="hidden bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg">
     <h2 class="text-xl font-bold mb-4 text-blue-700">Completed Match Points</h2>
     <div class="space-y-3">
       <div>
@@ -73,43 +113,14 @@
     </div>
   </div>
 
-  <!-- Live Match Card -->
-  <div id="liveCard" class="hidden bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg">
-    <h2 class="text-xl font-bold mb-4 text-green-700">Ongoing Match Suggestions</h2>
-    <div class="space-y-3">
-      <div>
-        <label class="block font-semibold">Current Score (Your Team)</label>
-        <input id="l_yourScore" type="number" class="w-full border p-2 rounded-md" placeholder="e.g. 95">
-      </div>
-      <div>
-        <label class="block font-semibold">Overs Faced</label>
-        <input id="l_yourOvers" type="number" step="0.1" class="w-full border p-2 rounded-md" placeholder="e.g. 12">
-      </div>
-      <div>
-        <label class="block font-semibold">Target / Opponent Score</label>
-        <input id="l_oppScore" type="number" class="w-full border p-2 rounded-md" placeholder="e.g. 160">
-      </div>
-      <div>
-        <label class="block font-semibold">Wickets Taken So Far</label>
-        <input id="l_wkts" type="number" class="w-full border p-2 rounded-md" placeholder="e.g. 4">
-      </div>
-      <button onclick="suggestLive()" class="mt-3 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg">Get Suggestions</button>
-    </div>
-
-    <div id="liveResult" class="hidden mt-6 border-t pt-4">
-      <h3 class="text-lg font-bold text-green-800 mb-2">Live Suggestions</h3>
-      <div id="l_suggestions" class="text-gray-700"></div>
-    </div>
-  </div>
-
   <footer class="mt-6 text-gray-500 text-sm">© 2025 ARCL Helper (Unofficial)</footer>
 
   <script>
-    // Tab switcher
-    const tabCompleted = document.getElementById("tabCompleted");
+    // Tab switching logic (Live = default)
     const tabLive = document.getElementById("tabLive");
-    const completedCard = document.getElementById("completedCard");
+    const tabCompleted = document.getElementById("tabCompleted");
     const liveCard = document.getElementById("liveCard");
+    const completedCard = document.getElementById("completedCard");
 
     tabCompleted.onclick = () => {
       tabCompleted.classList.replace("bg-white","bg-blue-600");
@@ -119,7 +130,6 @@
       completedCard.classList.remove("hidden");
       liveCard.classList.add("hidden");
     };
-
     tabLive.onclick = () => {
       tabLive.classList.replace("bg-white","bg-blue-600");
       tabLive.classList.replace("text-blue-700","text-white");
@@ -129,27 +139,7 @@
       completedCard.classList.add("hidden");
     };
 
-    function battingPoints(isBatFirst, yourScore, yourOvers, oppScore, oppOvers, won) {
-      if (won) return 0; // only losing team gets bonus
-      if (isBatFirst) {
-        const rate = (yourScore/yourOvers) / (oppScore/oppOvers);
-        if (rate > 0.9) return 5;
-        if (rate > 0.8) return 4;
-        if (rate > 0.7) return 3;
-        if (rate > 0.6) return 2;
-        if (rate > 0.5) return 1;
-        return 0;
-      } else {
-        const pct = yourScore/oppScore;
-        if (pct > 0.9) return 5;
-        if (pct > 0.8) return 4;
-        if (pct > 0.7) return 3;
-        if (pct > 0.6) return 2;
-        if (pct > 0.5) return 1;
-        return 0;
-      }
-    }
-
+    // Helper: get ARCL bowling points
     function bowlingPoints(wkts) {
       if (wkts >= 7) return 5;
       if (wkts >= 6) return 4;
@@ -159,6 +149,7 @@
       return 0;
     }
 
+    // Completed match logic (unchanged)
     function calculateCompleted() {
       const s = v => parseFloat(document.getElementById(v).value);
       const yourScore = s("c_yourScore"), yourOvers = s("c_yourOvers");
@@ -172,14 +163,36 @@
       let yourBatPts=0, yourBowlPts=0, oppBatPts=0, oppBowlPts=0;
       const youWon = result==="win", tie=result==="tie", youLost=result==="lose";
 
+      // Batting points logic
+      function battingPts(isBatFirst, score, overs, oppScore, oppOvers, won) {
+        if (won) return 0;
+        if (isBatFirst) {
+          const rate = (score/overs) / (oppScore/oppOvers);
+          if (rate > 0.9) return 5;
+          if (rate > 0.8) return 4;
+          if (rate > 0.7) return 3;
+          if (rate > 0.6) return 2;
+          if (rate > 0.5) return 1;
+          return 0;
+        } else {
+          const pct = score/oppScore;
+          if (pct > 0.9) return 5;
+          if (pct > 0.8) return 4;
+          if (pct > 0.7) return 3;
+          if (pct > 0.6) return 2;
+          if (pct > 0.5) return 1;
+          return 0;
+        }
+      }
+
       if (youLost) {
-        yourBatPts = battingPoints(batFirst, yourScore, yourOvers, oppScore, oppOvers, false);
+        yourBatPts = battingPts(batFirst, yourScore, yourOvers, oppScore, oppOvers, false);
         yourBowlPts = bowlingPoints(yourWkts);
-        oppBatPts = battingPoints(!batFirst, oppScore, oppOvers, yourScore, yourOvers, true);
+        oppBatPts = battingPts(!batFirst, oppScore, oppOvers, yourScore, yourOvers, true);
         oppBowlPts = bowlingPoints(oppWkts);
       } else if (youWon) {
         yourBatPts = 0; yourBowlPts = 0;
-        oppBatPts = battingPoints(!batFirst, oppScore, oppOvers, yourScore, yourOvers, false);
+        oppBatPts = battingPts(!batFirst, oppScore, oppOvers, yourScore, yourOvers, false);
         oppBowlPts = bowlingPoints(oppWkts);
       }
 
@@ -200,29 +213,59 @@
       document.getElementById("completedResult").classList.remove("hidden");
     }
 
+    // Live match enhanced suggestions
     function suggestLive() {
       const yourScore = parseFloat(document.getElementById("l_yourScore").value);
       const yourOvers = parseFloat(document.getElementById("l_yourOvers").value);
       const oppScore = parseFloat(document.getElementById("l_oppScore").value);
+      const oppOvers = parseFloat(document.getElementById("l_oppOvers").value);
       const wkts = parseFloat(document.getElementById("l_wkts").value);
-      if ([yourScore, yourOvers, oppScore].some(isNaN)) return alert("Please fill in all fields.");
-      
-      const percent = yourScore / oppScore;
-      const neededFor5 = Math.ceil(oppScore * 0.9);
-      const rate = (yourScore/yourOvers) / (oppScore/16); // assume 16 overs match for approximation
-      const suggestions = [];
+      const batFirst = document.getElementById("l_batFirst").value === "us";
 
-      if (percent < 0.9)
-        suggestions.push(`Score at least ${neededFor5} runs (${(neededFor5-yourScore)} more) for 5 batting points.`);
-      if (wkts < 7)
-        suggestions.push(`Take ${7 - wkts} more wickets for maximum bowling points.`);
-      if (rate < 0.9)
-        suggestions.push(`Improve run rate — current ${(yourScore/yourOvers).toFixed(2)} vs target ${(oppScore/16*0.9).toFixed(2)}.`);
+      if ([yourScore, yourOvers, oppScore, oppOvers].some(isNaN))
+        return alert("Please fill in all required fields.");
 
-      if (suggestions.length === 0)
-        suggestions.push("You're on track for full points! 🎉");
+      let suggestions = [];
 
-      document.getElementById("l_suggestions").innerHTML = suggestions.join("<br>");
+      // Batting analysis
+      if (batFirst) {
+        const rate = (yourScore / yourOvers) / (oppScore / oppOvers);
+        const thresholds = [0.5,0.6,0.7,0.8,0.9];
+        const achieved = thresholds.filter(t => rate > t).length;
+        const next = thresholds[achieved];
+        if (achieved >= 5) suggestions.push("🏏 Excellent! You’re on track for full 5 batting points.");
+        else {
+          const neededRate = next * (oppScore / oppOvers);
+          const neededRuns = Math.ceil(neededRate * yourOvers - yourScore);
+          suggestions.push(`📈 Run rate: ${(rate*100).toFixed(1)}% of target.`);
+          suggestions.push(`🏏 Need about ${neededRuns} more runs to reach ${(next*100)}% rate → +1 batting point.`);
+        }
+      } else {
+        const percent = yourScore / oppScore;
+        const thresholds = [0.5,0.6,0.7,0.8,0.9];
+        const achieved = thresholds.filter(t => percent > t).length;
+        const next = thresholds[achieved];
+        if (achieved >= 5) suggestions.push("🏏 Great! You’re at full 5 batting points pace.");
+        else {
+          const neededRuns = Math.ceil(next * oppScore - yourScore);
+          suggestions.push(`📊 You’re at ${(percent*100).toFixed(1)}% of target.`);
+          suggestions.push(`🏏 Need ${neededRuns} more runs to cross ${(next*100)}% threshold → +1 batting point.`);
+        }
+      }
+
+      // Bowling analysis
+      const bowlPts = bowlingPoints(wkts);
+      if (bowlPts < 5) {
+        const milestones = [1,3,5,6,7];
+        const next = milestones.find(m => m > wkts);
+        const need = next - wkts;
+        suggestions.push(`🎯 Take ${need} more wicket${need>1?"s":""} for next bowling point (now ${bowlPts}).`);
+      } else {
+        suggestions.push("🔥 You’ve earned full 5 bowling points already!");
+      }
+
+      document.getElementById("l_suggestions").innerHTML = suggestions
+        .map(s => `<div class="p-2 bg-green-50 rounded-lg">${s}</div>`).join("");
       document.getElementById("liveResult").classList.remove("hidden");
     }
   </script>

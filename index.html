@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARCL Points Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-blue-100 min-h-screen flex flex-col items-center p-4">
+  <header class="text-center mt-6 mb-4">
+    <h1 class="text-3xl font-bold text-blue-800">🏏 ARCL Points Calculator</h1>
+    <p class="text-gray-600">Calculate your match points and see how to improve</p>
+  </header>
+
+  <main class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg">
+    <div class="grid grid-cols-1 gap-4">
+      <div>
+        <label class="block text-gray-700 font-semibold">Your Team Score</label>
+        <input id="yourScore" type="number" class="w-full p-2 border rounded-md" placeholder="e.g. 150" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold">Your Overs Faced</label>
+        <input id="yourOvers" type="number" step="0.1" class="w-full p-2 border rounded-md" placeholder="e.g. 16" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold">Opponent Score</label>
+        <input id="oppScore" type="number" class="w-full p-2 border rounded-md" placeholder="e.g. 160" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold">Opponent Overs Faced</label>
+        <input id="oppOvers" type="number" step="0.1" class="w-full p-2 border rounded-md" placeholder="e.g. 16" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold">Wickets Taken by You</label>
+        <input id="yourWkts" type="number" class="w-full p-2 border rounded-md" placeholder="e.g. 6" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold">Match Result</label>
+        <select id="result" class="w-full p-2 border rounded-md">
+          <option value="win">Won</option>
+          <option value="lose">Lost</option>
+          <option value="tie">Tie</option>
+        </select>
+      </div>
+      <button onclick="calculatePoints()" class="bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition">Calculate</button>
+    </div>
+
+    <div id="resultBox" class="hidden mt-6 border-t pt-4">
+      <h2 class="text-xl font-bold text-blue-700 mb-2">Results</h2>
+      <p id="battingPoints" class="text-gray-800"></p>
+      <p id="bowlingPoints" class="text-gray-800"></p>
+      <p id="totalPoints" class="font-semibold text-lg text-blue-800 mt-2"></p>
+      <div id="suggestions" class="mt-4 text-gray-700"></div>
+    </div>
+  </main>
+
+  <footer class="mt-6 text-gray-500 text-sm">© 2025 ARCL Helper (Unofficial)</footer>
+
+  <script>
+    function calculatePoints() {
+      const yourScore = parseFloat(document.getElementById("yourScore").value);
+      const yourOvers = parseFloat(document.getElementById("yourOvers").value);
+      const oppScore = parseFloat(document.getElementById("oppScore").value);
+      const oppOvers = parseFloat(document.getElementById("oppOvers").value);
+      const yourWkts = parseFloat(document.getElementById("yourWkts").value);
+      const result = document.getElementById("result").value;
+
+      if (isNaN(yourScore) || isNaN(oppScore)) {
+        alert("Please fill in both scores.");
+        return;
+      }
+
+      let battingPts = 0, bowlingPts = 0, total = 0, suggestions = [];
+
+      const win = result === "win";
+      const tie = result === "tie";
+
+      // Batting points logic
+      if (!win && !tie) {
+        if (yourOvers >= oppOvers) {
+          const rate = (yourScore / yourOvers) / (oppScore / oppOvers);
+          if (rate > 0.9) battingPts = 5;
+          else if (rate > 0.8) battingPts = 4;
+          else if (rate > 0.7) battingPts = 3;
+          else if (rate > 0.6) battingPts = 2;
+          else if (rate > 0.5) battingPts = 1;
+          else battingPts = 0;
+          suggestions.push(`Increase run rate to ${Math.round((oppScore/oppOvers)*0.9*yourOvers)} runs for +5 batting points.`);
+        } else {
+          const percent = yourScore / oppScore;
+          if (percent > 0.9) battingPts = 5;
+          else if (percent > 0.8) battingPts = 4;
+          else if (percent > 0.7) battingPts = 3;
+          else if (percent > 0.6) battingPts = 2;
+          else if (percent > 0.5) battingPts = 1;
+          else battingPts = 0;
+          suggestions.push(`Score ${(oppScore * 0.9).toFixed(0)} runs for full 5 batting points.`);
+        }
+      }
+
+      // Bowling points
+      if (yourWkts >= 7) bowlingPts = 5;
+      else if (yourWkts >= 6) bowlingPts = 4;
+      else if (yourWkts >= 5) bowlingPts = 3;
+      else if (yourWkts >= 3) bowlingPts = 2;
+      else if (yourWkts >= 1) bowlingPts = 1;
+      suggestions.push(`Take ${7 - yourWkts} more wickets for maximum 5 bowling points.`);
+
+      // Total points
+      if (tie) total = 15;
+      else if (win) total = 20 + (10 - (battingPts + bowlingPts));
+      else total = battingPts + bowlingPts;
+
+      document.getElementById("battingPoints").innerText = `Batting Points: ${battingPts}`;
+      document.getElementById("bowlingPoints").innerText = `Bowling Points: ${bowlingPts}`;
+      document.getElementById("totalPoints").innerText = `Total Points: ${total}`;
+      document.getElementById("suggestions").innerHTML = `<b>Suggestions:</b><br>${suggestions.join("<br>")}`;
+      document.getElementById("resultBox").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>

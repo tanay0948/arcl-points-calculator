@@ -3,87 +3,212 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ARCL Points & Strategy Assistant</title>
+  <title>ARCL Points </title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gradient-to-br from-indigo-100 to-blue-50 min-h-screen flex flex-col items-center p-4">
   <!-- Header -->
   <header class="text-center mt-6 mb-4">
-    <h1 class="text-3xl font-bold text-blue-800">🏏 ARCL Points & Strategy Assistant</h1>
+    <h1 class="text-3xl font-bold text-blue-800">🏏 ARCL Points Assistant</h1>
     <p class="text-gray-600">Understand rules • Plan smart • Track points live</p>
   </header>
 
   <!-- Navigation Tabs -->
   <div class="flex space-x-4 mb-4">
-    <button id="tabRules" class="tab px-4 py-2 bg-white border border-blue-600 text-blue-700 rounded-lg font-semibold">Rules & Strategy</button>
+    <button id="tabRules" class="tab px-4 py-2 bg-white border border-blue-600 text-blue-700 rounded-lg font-semibold">Rules</button>
     <button id="tabLive" class="tab px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold">Live Match</button>
     <button id="tabCompleted" class="tab px-4 py-2 bg-white border border-blue-600 text-blue-700 rounded-lg font-semibold">Completed Match</button>
   </div>
 
   <!-- ========== RULES TAB ========== -->
-  <section id="rulesCard" class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-3xl overflow-y-auto max-h-[75vh]">
-    <h2 class="text-2xl font-bold text-blue-800 mb-4">📘 ARCL Rules & Examples</h2>
-    <p class="text-gray-700 mb-3">
-      ARCL (Amazon Recreational Cricket League) awards <strong>30 points per match</strong> — split between performance and result.
-    </p>
-    <div class="space-y-4 text-gray-800">
-      <div>
-        <h3 class="font-semibold text-blue-700">🏆 Points Breakdown</h3>
-        <ul class="list-disc ml-6">
-          <li>Winning team: <strong>20 points</strong> + remaining bonus from losing team.</li>
-          <li>Losing team: Up to <strong>10 bonus points</strong> (batting + bowling).</li>
-          <li>Tie: <strong>15 each</strong>.</li>
-        </ul>
+ <!-- ========== RULES TAB ========== -->
+<section id="rulesCard" class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-3xl overflow-y-auto max-h-[75vh]">
+  <h2 class="text-2xl font-bold text-blue-800 mb-4">📘 ARCL Points System Explained</h2>
+
+  <p class="text-gray-700 mb-3">
+    Each match in ARCL has a total of <strong>30 points</strong> shared between both teams.
+  </p>
+
+  <div class="space-y-5 text-gray-800">
+
+    <!-- Points Split -->
+    <div>
+      <h3 class="font-semibold text-blue-700 text-lg">⚖️ How the 30 Points Are Split</h3>
+      <ul class="list-disc ml-6 space-y-1">
+        <li><strong>20 points</strong> always go to the winning team.</li>
+        <li>The remaining <strong>10 points</strong> are “bonus points” for batting and bowling performance.</li>
+        <li><strong>Winning team</strong> = 20 + (10 − opponent’s bonus).</li>
+        <li><strong>Losing team</strong> = only their earned bonus (0–10).</li>
+        <li><strong>Tie</strong> = both teams get 15 each, no bonus.</li>
+      </ul>
+
+      <table class="w-full text-sm border mt-3 text-center">
+        <thead class="bg-blue-100 font-semibold">
+          <tr><th>Result</th><th>What You Get</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Win</td><td>20 + (10 − opponent’s bonus)</td></tr>
+          <tr><td>Lose</td><td>Your own bonus (0–10)</td></tr>
+          <tr><td>Tie</td><td>15 each</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bonus Points -->
+    <div>
+      <h3 class="font-semibold text-blue-700 text-lg">🎯 How Bonus Points Are Given</h3>
+      <p class="mb-1">Two types of bonus points for the losing team:</p>
+      <ol class="list-decimal ml-6">
+        <li><strong>Batting Points</strong> – up to 5 based on score or run rate.</li>
+        <li><strong>Bowling Points</strong> – up to 5 based on wickets taken.</li>
+      </ol>
+    </div>
+
+    <!-- Batting Points -->
+    <div>
+      <h3 class="font-semibold text-blue-700 text-lg">1️⃣ Batting Points (max 5)</h3>
+      <p>If you lose, batting points depend on how close your performance was to the winner’s.</p>
+
+      <h4 class="font-semibold mt-2">Case A – You Batted Second (Chasing)</h4>
+      <table class="w-full border text-sm text-center mt-2">
+        <thead class="bg-blue-100"><tr><th>Points</th><th>Your Score vs Winner’s Score</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>&gt;50% and ≤60%</td></tr>
+          <tr><td>2</td><td>&gt;60% and ≤70%</td></tr>
+          <tr><td>3</td><td>&gt;70% and ≤80%</td></tr>
+          <tr><td>4</td><td>&gt;80% and ≤90%</td></tr>
+          <tr><td>5</td><td>&gt;90%</td></tr>
+        </tbody>
+      </table>
+
+      <div class="bg-gray-50 rounded-lg p-3 mt-2 text-sm">
+        <strong>Example:</strong><br>
+        Opponent made 160.<br>
+        You made 145 (90.6%) → 5 batting points even though you lost.
       </div>
 
-      <div>
-        <h3 class="font-semibold text-blue-700">📈 Batting Points – Losing Team</h3>
-        <p>If <strong>batting second</strong>, based on % of target achieved:</p>
-        <table class="w-full border text-sm mt-2">
-          <thead><tr class="bg-blue-100"><th>Points</th><th>Condition</th></tr></thead>
-          <tbody class="text-center">
-            <tr><td>1</td><td>>50% & ≤60%</td></tr>
-            <tr><td>2</td><td>>60% & ≤70%</td></tr>
-            <tr><td>3</td><td>>70% & ≤80%</td></tr>
-            <tr><td>4</td><td>>80% & ≤90%</td></tr>
-            <tr><td>5</td><td>>90%</td></tr>
-          </tbody>
-        </table>
-        <p class="mt-2">If <strong>batting first</strong>, based on run-rate ratio vs. winner’s run rate.</p>
-      </div>
+      <h4 class="font-semibold mt-4">Case B – You Batted First (They Chased)</h4>
+      <table class="w-full border text-sm text-center mt-2">
+        <thead class="bg-blue-100"><tr><th>Points</th><th>Your Run Rate vs Winner’s Run Rate</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>&gt;50% and ≤60%</td></tr>
+          <tr><td>2</td><td>&gt;60% and ≤70%</td></tr>
+          <tr><td>3</td><td>&gt;70% and ≤80%</td></tr>
+          <tr><td>4</td><td>&gt;80% and ≤90%</td></tr>
+          <tr><td>5</td><td>&gt;90%</td></tr>
+        </tbody>
+      </table>
 
-      <div>
-        <h3 class="font-semibold text-blue-700">🎯 Bowling Points – Losing Team</h3>
-        <table class="w-full border text-sm mt-2">
-          <thead><tr class="bg-blue-100"><th>Points</th><th>Wickets Taken</th></tr></thead>
-          <tbody class="text-center">
-            <tr><td>1</td><td>1 wicket</td></tr>
-            <tr><td>2</td><td>3 wickets</td></tr>
-            <tr><td>3</td><td>5 wickets</td></tr>
-            <tr><td>4</td><td>6 wickets</td></tr>
-            <tr><td>5</td><td>7 wickets or All Out</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div>
-        <h3 class="font-semibold text-blue-700">💡 Example</h3>
-        <p>Opponent made 160. You made 145 (91%) & took 6 wickets → Batting 5 + Bowling 4 = 9 pts.<br>
-          Opponent gets 20 + (10–9) = 21 pts.</p>
-      </div>
-
-      <div>
-        <h3 class="font-semibold text-blue-700">🚀 Strategy to Maximize Points</h3>
-        <ul class="list-disc ml-6">
-          <li><strong>Batting First:</strong> Push run rate; defend hard to deny bonus points. Bowl them out to grab all 30.</li>
-          <li><strong>Batting Second:</strong> Chase efficiently. Even if losing, reach 90% target & take 5+ wickets for 10 bonus pts.</li>
-          <li>Keep games on time — late starts reduce overs → lower totals → fewer points.</li>
-          <li>Maintain clean scorecards — penalties cost league points.</li>
-        </ul>
+      <div class="bg-gray-50 rounded-lg p-3 mt-2 text-sm">
+        <strong>Example:</strong><br>
+        You made 140 in 16 overs = 8.75 RPO.<br>
+        Opponent chased 141 in 14 overs = 10.07 RPO.<br>
+        8.75 / 10.07 = 86.9% → 4 batting points.
       </div>
     </div>
-  </section>
+
+    <!-- Bowling Points -->
+    <div>
+      <h3 class="font-semibold text-blue-700 text-lg">2️⃣ Bowling Points (max 5)</h3>
+      <p>Given based on how many wickets your team took (only the losing side earns these).</p>
+
+      <table class="w-full border text-sm text-center mt-2">
+        <thead class="bg-blue-100"><tr><th>Wickets Taken</th><th>Bowling Points</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>1</td></tr>
+          <tr><td>3</td><td>2</td></tr>
+          <tr><td>5</td><td>3</td></tr>
+          <tr><td>6</td><td>4</td></tr>
+          <tr><td>7+</td><td>5</td></tr>
+        </tbody>
+      </table>
+
+      <div class="bg-gray-50 rounded-lg p-3 mt-2 text-sm">
+        <strong>Example:</strong><br>
+        You took 6 wickets while losing → 4 bowling points.
+      </div>
+    </div>
+
+    <!-- Detailed Examples -->
+    <div>
+      <h3 class="font-semibold text-blue-700 text-lg">💡 Detailed Match Examples</h3>
+
+      <div class="bg-green-50 p-3 rounded-lg text-sm mb-3">
+        <strong>Example 1 — You Lost While Chasing</strong><br>
+        Opponent made 160.<br>
+        You made 145 (91%) and took 6 wickets.<br><br>
+        ➤ Batting = 5 (scored >90%)<br>
+        ➤ Bowling = 4 (took 6 wickets)<br>
+        ➤ Your Total = 9 bonus points<br>
+        ➤ Opponent = 20 + (10 − 9) = 21 points<br><br>
+        ✅ <em>Result:</em> You 9 pts • Opponent 21 pts
+      </div>
+
+      <div class="bg-green-50 p-3 rounded-lg text-sm mb-3">
+        <strong>Example 2 — You Won Comfortably</strong><br>
+        You scored 150 and bowled out opponent for 100.<br>
+        Opponent’s percentage = 100 / 150 = 66.6 % → 2 batting points.<br>
+        They took only 3 wickets → 2 bowling points.<br>
+        Opponent’s total = 4 bonus points.<br>
+        ➤ You get 20 + (10 − 4) = 26 points.<br><br>
+        ✅ <em>Result:</em> You 26 pts • Opponent 4 pts
+      </div>
+
+      <div class="bg-green-50 p-3 rounded-lg text-sm mb-3">
+        <strong>Example 3 — Tie Game</strong><br>
+        Both teams score 135 runs.<br>
+        No bonus calculation — both teams get 15 points each.<br>
+        ✅ <em>Result:</em> 15 pts each
+      </div>
+
+      <div class="bg-green-50 p-3 rounded-lg text-sm mb-3">
+        <strong>Example 4 — You Batted First and Lost</strong><br>
+        You made 140 in 16 overs (8.75 rpo). Opponent chased 141 in 15 overs (9.4 rpo).<br>
+        Your run-rate ratio = 8.75 / 9.4 = 93.1 % → 5 batting points.<br>
+        You took 5 wickets → 3 bowling points.<br>
+        ➤ Total = 8 points out of 10.<br>
+        ➤ Opponent = 20 + (10 − 8) = 22 points.<br>
+        ✅ <em>Result:</em> You 8 pts • Opponent 22 pts
+      </div>
+
+      <div class="bg-green-50 p-3 rounded-lg text-sm mb-3">
+        <strong>Example 5 — You Lost Heavily</strong><br>
+        Opponent made 180. You managed 100 runs (55 %) and took 2 wickets.<br>
+        ➤ Batting = 1 point (>50 %)<br>
+        ➤ Bowling = 1 point (2 wickets ≈ between 1 and 3)<br>
+        ➤ Total = 2 points.<br>
+        ➤ Opponent = 20 + (10 − 2) = 28 points.<br>
+        ✅ <em>Result:</em> You 2 pts • Opponent 28 pts
+      </div>
+
+      <div class="bg-green-50 p-3 rounded-lg text-sm">
+        <strong>Example 6 — Low-Scoring Thriller</strong><br>
+        You batted first: 85 all out. Opponent chased in 15 overs for 86/7.<br>
+        ➤ Your bowling = 7 wickets → 5 points.<br>
+        ➤ Your batting = 85 / 86 ≈ 99 % → 5 points.<br>
+        Total = 10 points (max possible while losing).<br>
+        ➤ Opponent = 20 + (10 − 10) = 20 points.<br>
+        ✅ <em>Result:</em> You 10 pts • Opponent 20 pts
+      </div>
+    </div>
+
+    <!-- Quick Recap -->
+    <div>
+      <h3 class="font-semibold text-blue-700 text-lg">🔢 Quick Recap</h3>
+      <table class="w-full border text-sm text-center mt-2">
+        <thead class="bg-blue-100"><tr><th>Situation</th><th>Points</th></tr></thead>
+        <tbody>
+          <tr><td>Win</td><td>20 + (10 − opponent’s bonus)</td></tr>
+          <tr><td>Lose</td><td>0 – 10 (batting + bowling)</td></tr>
+          <tr><td>Tie</td><td>15 each</td></tr>
+          <tr><td>Max per match</td><td>30 points shared</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
 
   <!-- ========== LIVE MATCH TAB ========== -->
   <section id="liveCard" class="hidden bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg">
@@ -222,7 +347,7 @@
       document.getElementById("completedResult").classList.remove("hidden");
     }
 
-    // ======== Live Match Strategy ========
+    // ======== Live Match  ========
     function suggestLive() {
       const yourScore=parseFloat(document.getElementById("l_yourScore").value),
             yourOvers=parseFloat(document.getElementById("l_yourOvers").value),

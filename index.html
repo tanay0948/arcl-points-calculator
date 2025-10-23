@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ARCL Points </title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
   #chatContainer::-webkit-scrollbar {
     width: 6px;
@@ -314,7 +315,7 @@ function appendMessage(sender, text) {
     msgDiv.textContent = `🧍‍♂️ You: ${text}`;
   } else {
     msgDiv.classList.add("bg-green-50", "text-gray-800");
-    msgDiv.innerHTML = text; // Allow formatted Gemini responses
+    msgDiv.innerHTML = marked.parse(text); // ✅ converts markdown → HTML
   }
 
   chatBox.appendChild(msgDiv);

@@ -269,11 +269,11 @@ async function sendMessage() {
   input.value = "";
 
   // Maintain last 5 messages (rolling context)
-  chatHistory.push({ role: "user", content: userText });
-  if (chatHistory.length > 5) chatHistory.shift();
+  // chatHistory.push({ role: "user", content: userText });
+  // if (chatHistory.length > 5) chatHistory.shift();
 
-  // Prepare conversation context
-  const combinedContext = chatHistory.map(m => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`).join("\n");
+  // // Prepare conversation context
+  // const combinedContext = chatHistory.map(m => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`).join("\n");
 
   appendMessage("assistant", "⏳ Thinking...");
 

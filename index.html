@@ -294,9 +294,9 @@ async function sendMessage() {
     chatBox.lastChild.remove();
     appendMessage("assistant", reply);
 
-    // Add assistant response to history
-    chatHistory.push({ role: "assistant", content: reply });
-    if (chatHistory.length > 5) chatHistory.shift();
+    // // Add assistant response to history
+    // chatHistory.push({ role: "assistant", content: reply });
+    // if (chatHistory.length > 5) chatHistory.shift();
 
   } catch (err) {
     chatBox.lastChild.remove();

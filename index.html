@@ -284,7 +284,7 @@ async function sendMessage() {
         "Content-Type": "application/json",
         "x-proxy-key": "ARCL1234"
       },
-      body: JSON.stringify({ situation: combinedContext })
+      body: JSON.stringify({ situation: userText })
     });
 
     const data = await response.json();
